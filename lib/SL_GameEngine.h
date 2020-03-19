@@ -10,7 +10,9 @@ private:
 	SDL_Window *_window;
 	SDL_Renderer *_renderer;
 
+	int _width, _height;
 	int _FPS, _frameDelay, _frameTime;
+	int _millisecondsSinceLastLoop;
 	Uint32 _frameStart;
 	bool _isRunning;
 
@@ -66,7 +68,19 @@ public:
 	/**
 	 * Provides access to the renderer
 	 */
-	SDL_Renderer *getRenderer();
+	SDL_Renderer *getRenderer() { return _renderer; };
+
+	/**
+	 * Provides access to the GameEngine width
+	 */
+	int getWidth() { return _width; };
+
+	/**
+	 * Provides access to the GameEngine height
+	 */
+	int getHeight() { return _height; };
+
+	int getMillisecondsSinceLastLoop() { return _millisecondsSinceLastLoop; }
 
 	/**
 	 * Handle a single event

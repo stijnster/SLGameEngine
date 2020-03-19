@@ -19,6 +19,9 @@ int SL_GameEngine::setup(const char *title, int width, int height, bool fullscre
 		return 1;
 	}
 
+	_width = width;
+	_height = height;
+
 	_FPS = fps;
 	_frameDelay = 1000 / _FPS;
 
@@ -28,7 +31,7 @@ int SL_GameEngine::setup(const char *title, int width, int height, bool fullscre
 		flags = flags | SDL_WINDOW_FULLSCREEN;
 	}
 
-	_window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
+	_window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _width, _height, flags);
 	if (_window == NULL)
 	{
 		printf("SL_GameEngine: Unable to create window\n");
@@ -54,6 +57,7 @@ void SL_GameEngine::setBackground(Uint8 red, Uint8 green, Uint8 blue)
 
 void SL_GameEngine::run()
 {
+	_millisecondsSinceLastLoop = 0;
 	while (_isRunning)
 	{
 		_startLoop();
@@ -107,6 +111,7 @@ void SL_GameEngine::_render()
 void SL_GameEngine::_endLoop()
 {
 	_frameTime = SDL_GetTicks() - _frameStart;
+
 	if (_frameDelay > _frameTime)
 	{
 		SDL_Delay(_frameDelay - _frameTime);
@@ -115,6 +120,7 @@ void SL_GameEngine::_endLoop()
 	{
 		printf("SL_GameEngine: frameDelay %d frameTime %d; frame takes to long to build\n", _frameDelay, _frameTime);
 	}
+	_millisecondsSinceLastLoop = SDL_GetTicks() - _frameStart;
 }
 
 void SL_GameEngine::teardown()
@@ -130,11 +136,6 @@ void SL_GameEngine::teardown()
 	}
 
 	SDL_Quit();
-}
-
-SDL_Renderer *SL_GameEngine::getRenderer()
-{
-	return _renderer;
 }
 
 void SL_GameEngine::handleEvent(SDL_Event event)
