@@ -3,12 +3,14 @@
 
 #include <stdio.h>
 #include <SDL2/SDL.h>
+#include "SL_GameController.h"
 
 class SL_GameEngine
 {
 private:
 	SDL_Window *_window;
 	SDL_Renderer *_renderer;
+	SL_GameController *_gameController;
 
 	int _FPS, _frameDelay, _frameTime;
 	Uint32 _frameStart;
@@ -50,6 +52,13 @@ public:
 	void setBackground(Uint8 red, Uint8 green, Uint8 blue);
 
 	/**
+	 * Sets the game controller
+	 *
+	 * The game controller can be used as a callback class to receive events from the engine.
+	 */
+	void setGameController(SL_GameController *gameController);
+
+	/**
 	 * Run the Engine
 	 *
 	 * Runs the engine untill the user wants to quit.
@@ -62,6 +71,11 @@ public:
 	 * This will clean up all created instances used by the engine.
 	 */
 	void teardown();
+
+	/**
+	 * Provides access to the renderer
+	 */
+	SDL_Renderer *getRenderer(){ return _renderer; };
 };
 
 #endif

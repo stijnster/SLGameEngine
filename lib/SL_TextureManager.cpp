@@ -10,3 +10,8 @@ SDL_Texture *SL_TextureManager::loadTexture(const char *filename, SDL_Renderer *
 
 	return texture;
 }
+
+void SL_TextureManager::destroyTexture(SDL_Texture *texture)
+{
+	SDL_DestroyTexture(texture);
+}

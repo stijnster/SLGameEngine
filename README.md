@@ -52,3 +52,7 @@ int main()
 ```
 
 Have a look in the example directory. It contains a working example of the engine and a Makefile to build the project.
+
+## Credits
+
+In the example project I've included assets from [Space Shooter (Redux, plus fonts and sounds) by Kenney Vleugels (www.kenney.nl)](https://www.kenney.nl/).

@@ -52,8 +52,18 @@ void SL_GameEngine::setBackground(Uint8 red, Uint8 green, Uint8 blue)
 	SDL_SetRenderDrawColor(_renderer, red, green, blue, 255);
 }
 
+void SL_GameEngine::setGameController(SL_GameController *gameController)
+{
+	_gameController = gameController;
+	_gameController->setGameEngine(this);
+}
+
 void SL_GameEngine::run()
 {
+	if(_gameController != NULL)
+	{
+		_gameController->beforeRun();
+	}
 	while (_isRunning)
 	{
 		startLoop();
@@ -63,6 +73,11 @@ void SL_GameEngine::run()
 		render();
 
 		endLoop();
+	}
+
+	if(_gameController != NULL)
+	{
+		_gameController->afterRun();
 	}
 }
 
@@ -77,6 +92,11 @@ void SL_GameEngine::handleEvents()
 
 	while (SDL_PollEvent(&event))
 	{
+		if(_gameController != NULL)
+		{
+			_gameController->handleEvent(event);
+		}
+
 		switch (event.type)
 		{
 		case SDL_QUIT:
@@ -90,16 +110,46 @@ void SL_GameEngine::handleEvents()
 
 void SL_GameEngine::update()
 {
+	if(_gameController != NULL)
+	{
+		_gameController->beforeUpdate();
+	}
+
 	// ...
+
+	if(_gameController != NULL)
+	{
+		_gameController->afterUpdate();
+	}
 }
 
 void SL_GameEngine::render()
 {
+	if(_gameController != NULL)
+	{
+		_gameController->beforeRender();
+	}
+
 	SDL_RenderClear(_renderer);
+
+	if(_gameController != NULL)
+	{
+		_gameController->startRender();
+	}
 
 	// ...
 
+	if(_gameController != NULL)
+	{
+		_gameController->endRender();
+	}
+
 	SDL_RenderPresent(_renderer);
+
+	if(_gameController != NULL)
+	{
+		_gameController->afterRender();
+	}
 }
 
 void SL_GameEngine::endLoop()
