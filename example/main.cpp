@@ -4,7 +4,7 @@ int main()
 {
 	SL_GameEngine *engine = new SL_GameEngine();
 
-	if(engine->setup("My Example Game", 800, 640, false, 25) == 0)
+	if (engine->setup("My Example Game", 800, 640, false, 25) == 0)
 	{
 		engine->setBackground(127, 127, 127);
 

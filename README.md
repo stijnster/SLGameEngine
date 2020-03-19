@@ -33,11 +33,15 @@ int main()
 	SL_GameEngine *engine = new SL_GameEngine();
 
 	// create a 800x640 window (not fullscreen) with a framerate of 25 frames per second
-	if(engine->setup("My Example Game", 800, 640, false, 25) == 0)
+	if (engine->setup("My Example Game", 800, 640, false, 25) == 0)
 	{
+		// set the window background color (RGB values)
 		engine->setBackground(127, 127, 127);
 
+		// run the engine untill the user wants to quit
 		engine->run();
+
+		// tear down the engine
 		engine->teardown();
 	}
 
