@@ -47,6 +47,69 @@ int SL_GameEngine::setup(const char *title, int width, int height, bool fullscre
 	return 0;
 }
 
+void SL_GameEngine::run()
+{
+	while (_isRunning)
+	{
+		startLoop();
+
+		handleEvents();
+		update();
+		render();
+
+		endLoop();
+	}
+}
+
+void SL_GameEngine::startLoop()
+{
+	_frameStart = SDL_GetTicks();
+}
+
+void SL_GameEngine::handleEvents()
+{
+	SDL_Event event;
+
+	while (SDL_PollEvent(&event))
+	{
+		switch (event.type)
+		{
+		case SDL_QUIT:
+			_isRunning = false;
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+void SL_GameEngine::update()
+{
+	// ...
+}
+
+void SL_GameEngine::render()
+{
+	SDL_RenderClear(_renderer);
+
+	// ...
+
+	SDL_RenderPresent(_renderer);
+}
+
+void SL_GameEngine::endLoop()
+{
+	_frameTime = SDL_GetTicks() - _frameStart;
+	if (_frameDelay > _frameTime)
+	{
+		SDL_Delay(_frameDelay - _frameTime);
+	}
+	else
+	{
+		printf("frameDelay %d frameTime %d; frame takes to long to build\n", _frameDelay, _frameTime);
+	}
+}
+
 void SL_GameEngine::teardown()
 {
 	if (_renderer)

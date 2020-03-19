@@ -8,6 +8,7 @@ int main()
 
 	if(engine->setup("My Example Game", 800, 640, false, 25) == 0)
 	{
+		engine->run();
 		engine->teardown();
 	}
 

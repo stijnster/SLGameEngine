@@ -14,11 +14,18 @@ private:
 	Uint32 _frameStart;
 	bool _isRunning;
 
+	void startLoop();
+	void handleEvents();
+	void update();
+	void render();
+	void endLoop();
+
 public:
 	SL_GameEngine();
 	~SL_GameEngine();
 
 	int setup(const char *title, int width, int height, bool fullscreen, int fps);
+	void run();
 	void teardown();
 };
 
