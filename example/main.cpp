@@ -8,6 +8,8 @@ int main()
 
 	if(engine->setup("My Example Game", 800, 640, false, 25) == 0)
 	{
+		engine->setBackground(127, 127, 127);
+
 		engine->run();
 		engine->teardown();
 	}

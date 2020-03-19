@@ -25,6 +25,7 @@ public:
 	~SL_GameEngine();
 
 	int setup(const char *title, int width, int height, bool fullscreen, int fps);
+	void setBackground(Uint8 red, Uint8 green, Uint8 blue);
 	void run();
 	void teardown();
 };

@@ -47,6 +47,11 @@ int SL_GameEngine::setup(const char *title, int width, int height, bool fullscre
 	return 0;
 }
 
+void SL_GameEngine::setBackground(Uint8 red, Uint8 green, Uint8 blue)
+{
+	SDL_SetRenderDrawColor(_renderer, red, green, blue, 255);
+}
+
 void SL_GameEngine::run()
 {
 	while (_isRunning)
@@ -106,7 +111,7 @@ void SL_GameEngine::endLoop()
 	}
 	else
 	{
-		printf("frameDelay %d frameTime %d; frame takes to long to build\n", _frameDelay, _frameTime);
+		printf("SL_GameEngine: frameDelay %d frameTime %d; frame takes to long to build\n", _frameDelay, _frameTime);
 	}
 }
 
