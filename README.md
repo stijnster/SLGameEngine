@@ -32,6 +32,7 @@ int main()
 {
 	SL_GameEngine *engine = new SL_GameEngine();
 
+	// create a 800x640 window (not fullscreen) with a framerate of 25 frames per second
 	if(engine->setup("My Example Game", 800, 640, false, 25) == 0)
 	{
 		engine->setBackground(127, 127, 127);
