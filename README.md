@@ -26,7 +26,7 @@ brew install sdl2_image
 Installing on the raspberry pi is a bit more complicated. Install instructions taken from [SDL2 2.0.8 on Raspberry Pi - ChoccyHobNob](https://choccyhobnob.com/sdl2-2-0-8-on-raspberry-pi/) and adapted;
 
 
-### SDL2
+#### SDL2
 ```
 sudo apt-get update
 
