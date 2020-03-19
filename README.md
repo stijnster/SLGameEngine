@@ -50,3 +50,5 @@ int main()
 	return 0;
 }
 ```
+
+Have a look in the example directory. It contains a working example of the engine and a Makefile to build the project.
