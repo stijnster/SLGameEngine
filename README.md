@@ -20,3 +20,28 @@ Do the following to install the requirements to your Mac;
 brew install sdl2
 brew install sdl2_image
 ```
+
+## Example
+
+Here is an example to setup, run and teardown an engine with a dark gray background color;
+
+```cpp
+#include "SL_GameEngine.h"
+
+int main()
+{
+	SL_GameEngine *engine = new SL_GameEngine();
+
+	if(engine->setup("My Example Game", 800, 640, false, 25) == 0)
+	{
+		engine->setBackground(127, 127, 127);
+
+		engine->run();
+		engine->teardown();
+	}
+
+	delete engine;
+
+	return 0;
+}
+```

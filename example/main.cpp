@@ -1,10 +1,8 @@
-#include "../lib/SL_GameEngine.h"
-
-SL_GameEngine *engine;
+#include "SL_GameEngine.h"
 
 int main()
 {
-	engine = new SL_GameEngine();
+	SL_GameEngine *engine = new SL_GameEngine();
 
 	if(engine->setup("My Example Game", 800, 640, false, 25) == 0)
 	{
