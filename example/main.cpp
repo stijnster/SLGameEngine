@@ -100,7 +100,7 @@ int main()
 {
 	MyGameEngine *engine = new MyGameEngine();
 
-	if (engine->setup("My Example Game", 1024, 768, false, 25) == 0)
+	if (engine->setup("My Example Game", 640, 480, false, 30) == 0)
 	{
 		engine->setBackground(32, 32, 32);
 		engine->createShipTexture();
