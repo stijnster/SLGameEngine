@@ -3,24 +3,22 @@
 
 #include <stdio.h>
 #include <SDL2/SDL.h>
-#include "SL_GameController.h"
 
 class SL_GameEngine
 {
 private:
 	SDL_Window *_window;
 	SDL_Renderer *_renderer;
-	SL_GameController *_gameController;
 
 	int _FPS, _frameDelay, _frameTime;
 	Uint32 _frameStart;
 	bool _isRunning;
 
-	void startLoop();
-	void handleEvents();
-	void update();
-	void render();
-	void endLoop();
+	void _startLoop();
+	void _handleEvents();
+	void _update();
+	void _render();
+	void _endLoop();
 
 public:
 	SL_GameEngine();
@@ -52,13 +50,6 @@ public:
 	void setBackground(Uint8 red, Uint8 green, Uint8 blue);
 
 	/**
-	 * Sets the game controller
-	 *
-	 * The game controller can be used as a callback class to receive events from the engine.
-	 */
-	void setGameController(SL_GameController *gameController);
-
-	/**
 	 * Run the Engine
 	 *
 	 * Runs the engine untill the user wants to quit.
@@ -75,7 +66,30 @@ public:
 	/**
 	 * Provides access to the renderer
 	 */
-	SDL_Renderer *getRenderer(){ return _renderer; };
+	SDL_Renderer *getRenderer();
+
+	/**
+	 * Handle a single event
+	 *
+	 * Events in the game loop are pulled and passed on to this virtual function.
+	 *
+	 * @param event The event to handle
+	 */
+	virtual void handleEvent(SDL_Event event);
+
+	/**
+	 * Update derived GameEngine
+	 *
+	 * A virtual function for the derived GameEngine that can is called from the game loop during the _update phase.
+	 */
+	virtual void update();
+
+	/**
+	 * Render derived GameEngine
+	 *
+	 * A virtual function for the derived GameEngine that can is called from the game loop during the _render phase.
+	 */
+	virtual void render();
 };
 
 #endif

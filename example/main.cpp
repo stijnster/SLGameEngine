@@ -1,20 +1,20 @@
 #include <SDL2/SDL.h>
 
 #include "SL_GameEngine.h"
-#include "SL_GameController.h"
 #include "SL_TextureManager.h"
 
-class MyGameController : public SL_GameController
+class MyGameEngine : public SL_GameEngine
 {
+
 private:
 	SDL_Texture *_shipTexture;
 	SDL_Rect _sourceRect;
 	SDL_Rect _destinationRect;
 
 public:
-	void beforeRun()
+	void createShipTexture()
 	{
-		_shipTexture = SL_TextureManager::loadTexture("assets/playerShip2_red.png", _gameEngine->getRenderer());
+		_shipTexture = SL_TextureManager::loadTexture("assets/playerShip2_red.png", getRenderer());
 		if (_shipTexture != NULL)
 		{
 			_sourceRect.x = _sourceRect.y = 0;
@@ -28,17 +28,12 @@ public:
 		}
 	}
 
-	void afterRun()
+	void cleanupShipTexture()
 	{
 		if (_shipTexture != NULL)
 		{
 			SL_TextureManager::destroyTexture(_shipTexture);
 		}
-	}
-
-	void startRender()
-	{
-		SDL_RenderCopy(_gameEngine->getRenderer(), _shipTexture, &_sourceRect, &_destinationRect);
 	}
 
 	void handleEvent(SDL_Event event)
@@ -65,25 +60,26 @@ public:
 			break;
 		}
 	}
+
+	void render()
+	{
+		SDL_RenderCopy(getRenderer(), _shipTexture, &_sourceRect, &_destinationRect);
+	}
 };
 
 int main()
 {
-	SL_GameEngine *engine = new SL_GameEngine();
+	MyGameEngine *engine = new MyGameEngine();
 
 	if (engine->setup("My Example Game", 800, 640, false, 25) == 0)
 	{
-		MyGameController *controller = new MyGameController();
-
-		controller->beforeUpdate();
-
-		engine->setGameController(controller);
 		engine->setBackground(127, 127, 127);
+		engine->createShipTexture();
 
 		engine->run();
-		engine->teardown();
 
-		delete controller;
+		engine->cleanupShipTexture();
+		engine->teardown();
 	}
 
 	delete engine;

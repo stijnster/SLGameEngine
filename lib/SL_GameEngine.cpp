@@ -52,50 +52,32 @@ void SL_GameEngine::setBackground(Uint8 red, Uint8 green, Uint8 blue)
 	SDL_SetRenderDrawColor(_renderer, red, green, blue, 255);
 }
 
-void SL_GameEngine::setGameController(SL_GameController *gameController)
-{
-	_gameController = gameController;
-	_gameController->setGameEngine(this);
-}
-
 void SL_GameEngine::run()
 {
-	if(_gameController != NULL)
-	{
-		_gameController->beforeRun();
-	}
 	while (_isRunning)
 	{
-		startLoop();
+		_startLoop();
 
-		handleEvents();
-		update();
-		render();
+		_handleEvents();
+		_update();
+		_render();
 
-		endLoop();
-	}
-
-	if(_gameController != NULL)
-	{
-		_gameController->afterRun();
+		_endLoop();
 	}
 }
 
-void SL_GameEngine::startLoop()
+void SL_GameEngine::_startLoop()
 {
 	_frameStart = SDL_GetTicks();
 }
 
-void SL_GameEngine::handleEvents()
+void SL_GameEngine::_handleEvents()
 {
 	SDL_Event event;
 
 	while (SDL_PollEvent(&event))
 	{
-		if(_gameController != NULL)
-		{
-			_gameController->handleEvent(event);
-		}
+		handleEvent(event);
 
 		switch (event.type)
 		{
@@ -108,51 +90,21 @@ void SL_GameEngine::handleEvents()
 	}
 }
 
-void SL_GameEngine::update()
+void SL_GameEngine::_update()
 {
-	if(_gameController != NULL)
-	{
-		_gameController->beforeUpdate();
-	}
-
-	// ...
-
-	if(_gameController != NULL)
-	{
-		_gameController->afterUpdate();
-	}
+	update();
 }
 
-void SL_GameEngine::render()
+void SL_GameEngine::_render()
 {
-	if(_gameController != NULL)
-	{
-		_gameController->beforeRender();
-	}
-
 	SDL_RenderClear(_renderer);
 
-	if(_gameController != NULL)
-	{
-		_gameController->startRender();
-	}
-
-	// ...
-
-	if(_gameController != NULL)
-	{
-		_gameController->endRender();
-	}
+	render();
 
 	SDL_RenderPresent(_renderer);
-
-	if(_gameController != NULL)
-	{
-		_gameController->afterRender();
-	}
 }
 
-void SL_GameEngine::endLoop()
+void SL_GameEngine::_endLoop()
 {
 	_frameTime = SDL_GetTicks() - _frameStart;
 	if (_frameDelay > _frameTime)
@@ -178,4 +130,21 @@ void SL_GameEngine::teardown()
 	}
 
 	SDL_Quit();
+}
+
+SDL_Renderer *SL_GameEngine::getRenderer()
+{
+	return _renderer;
+}
+
+void SL_GameEngine::handleEvent(SDL_Event event)
+{
+}
+
+void SL_GameEngine::update()
+{
+}
+
+void SL_GameEngine::render()
+{
 }
