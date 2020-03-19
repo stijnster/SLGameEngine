@@ -1,3 +1,5 @@
+#include <SDL2/SDL.h>
+
 #include "SL_GameEngine.h"
 #include "SL_GameController.h"
 #include "SL_TextureManager.h"
