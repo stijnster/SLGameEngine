@@ -1,7 +1,13 @@
-all: game
+all: clean build run
 
-game: main.o SL_GameEngine.o SL_TextureManager.o
-	g++ tmp/*.o -o bin/game -I/usr/local/include -L/usr/local/lib -lSDL2 -lSDL2_image
+run:
+	LD_LIBRARY_PATH=/usr/local/lib/ bin/game
+
+clean:
+	rm -rf tmp/* bin/*
+
+build: main.o SL_GameEngine.o SL_TextureManager.o
+	g++ tmp/*.o -o bin/game -lSDL2 -lSDL2_image
 
 main.o: main.cpp
 	g++ -c main.cpp -o tmp/main.o -I../lib
@@ -11,6 +17,3 @@ SL_GameEngine.o:
 
 SL_TextureManager.o:
 	g++ -c ../lib/SL_TextureManager.cpp -o tmp/SL_TextureManager.o
-
-clean:
-	rm -rf tmp/* bin/*

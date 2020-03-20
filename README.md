@@ -36,11 +36,12 @@ cd ~
 mkdir code
 cd code
 
-hg clone http://hg.libsdl.org/SDL
-cd SDL
+wget https://www.libsdl.org/release/SDL2-2.0.12.tar.gz
+tar zxvf SDL2-2.0.12.tar.gz
 
+cd SDL2-2.0.12
 ./autogen.sh
-./configure --disable-pulseaudio --disable-esd --disable-video-wayland --host=arm-raspberry-linux-gnueabihf --prefix=/usr
+./configure --disable-pulseaudio --disable-esd --disable-video-wayland --host=arm-raspberry-linux-gnueabihf
 
 make
 sudo make install
@@ -56,6 +57,7 @@ tar zxvf SDL2_image-2.0.5.tar.gz
 cd SDL2_image-2.0.5
 ./autogen.sh
 ./configure
+
 make
 sudo make install
 ```
@@ -74,6 +76,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 ```
 
 ## Example
+
 
 Here is an example to setup, run and teardown an engine with a dark gray background color;
 
@@ -103,7 +106,14 @@ int main()
 }
 ```
 
+### Working Example
+
 Have a look in the example directory. It contains a working example of the engine and a Makefile to build the project.
+
+```
+cd example
+make
+```
 
 ## Credits
 
