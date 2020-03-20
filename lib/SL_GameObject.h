@@ -6,8 +6,11 @@
 class SL_GameObject
 {
 public:
-	SL_GameObject(const char *filename, SDL_Renderer *renderer, int x, int y, int width, int height);
+	SL_GameObject();
 	~SL_GameObject();
+
+	void setup(const char *filename, SDL_Renderer *renderer, int x, int y, int width, int height);
+	void teardown();
 
 	void setSourceRect(int x, int y, int w, int h);
 	void setX(int x);
@@ -24,6 +27,11 @@ public:
 	void setHeight(int height);
 	int getHeight() { return _height; };
 
+	void setVelocityX(float velocityX) { _velocityX = velocityX; };
+	float getVelocityX() { return _velocityX; };
+	void setVelocityY(int velocityY) { _velocityY = velocityY; };
+	float getVelocityY() { return _velocityY; };
+
 	void update();
 	void render();
 
@@ -32,9 +40,12 @@ private:
 	int _y;
 	int _width;
 	int _height;
+	float _velocityX;
+	float _velocityY;
 	SDL_Texture *_texture;
 	SDL_Renderer *_renderer;
 	SDL_Rect _sourceRect, _destinationRect;
+	Uint32 _ticksSinceLastUpdate;
 
 	void _updatePosition();
 };

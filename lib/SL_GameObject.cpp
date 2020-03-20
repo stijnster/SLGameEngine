@@ -1,13 +1,24 @@
 #include "SL_GameObject.h"
 #include "SL_TextureManager.h"
 
-SL_GameObject::SL_GameObject(const char *filename, SDL_Renderer *renderer, int x, int y, int width, int height)
+SL_GameObject::SL_GameObject()
+{
+}
+
+SL_GameObject::~SL_GameObject()
+{
+}
+
+void SL_GameObject::setup(const char *filename, SDL_Renderer *renderer, int x, int y, int width, int height)
 {
 	_renderer = renderer;
 
 	SL_TextureWidthAndHeight textureManagerWidthAndHeight = SL_TextureManager::loadTextureWithAndHeight(filename, _renderer);
 
 	_texture = textureManagerWidthAndHeight.texture;
+
+	_velocityX = 0.0;
+	_velocityY = 0.0;
 
 	_sourceRect.x = 0;
 	_sourceRect.y = 0;
@@ -19,12 +30,15 @@ SL_GameObject::SL_GameObject(const char *filename, SDL_Renderer *renderer, int x
 	_width = width;
 	_height = height;
 
+	_ticksSinceLastUpdate = 0;
+
 	_updatePosition();
 }
 
-SL_GameObject::~SL_GameObject()
+void SL_GameObject::teardown()
 {
-	if(_texture != NULL){
+	if (_texture != NULL)
+	{
 		SL_TextureManager::destroyTexture(_texture);
 	}
 }
@@ -76,6 +90,19 @@ void SL_GameObject::_updatePosition()
 
 void SL_GameObject::update()
 {
+	float _ticks = (SDL_GetTicks() - _ticksSinceLastUpdate) / 1000.0;
+
+	if (_velocityX != 0.0)
+	{
+		setX(_x + (_velocityX * _ticks));
+	}
+
+	if (_velocityY != 0.0)
+	{
+		setY(_y + (_velocityY * _ticks));
+	}
+
+	_ticksSinceLastUpdate = SDL_GetTicks();
 }
 
 void SL_GameObject::render()

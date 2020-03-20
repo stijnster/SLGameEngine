@@ -4,11 +4,55 @@
 #include "SL_TextureManager.h"
 #include "SL_GameObject.h"
 
+class Player : public SL_GameObject
+{
+public:
+	void handleEvent(SDL_Event event)
+	{
+		switch (event.type)
+		{
+		case SDL_KEYDOWN:
+			if (event.key.keysym.scancode == SDL_SCANCODE_UP)
+			{
+				if (getVelocityY() > -100.0)
+				{
+					setVelocityY(getVelocityY() - 50.0);
+				}
+			}
+			if (event.key.keysym.scancode == SDL_SCANCODE_DOWN)
+			{
+				if (getVelocityY() < 100.0)
+				{
+					setVelocityY(getVelocityY() + 50.0);
+				}
+			}
+			if (event.key.keysym.scancode == SDL_SCANCODE_LEFT)
+			{
+				if (getVelocityX() > -100.0)
+				{
+					setVelocityX(getVelocityX() - 50.0);
+				}
+			}
+			if (event.key.keysym.scancode == SDL_SCANCODE_RIGHT)
+			{
+				if (getVelocityX() < 100.0)
+				{
+					setVelocityX(getVelocityX() + 50.0);
+				}
+			}
+			break;
+		}
+	}
+};
 class MyGameEngine : public SL_GameEngine
 {
 
 private:
-	SL_GameObject *_ship;
+	Player *_ship;
+
+	SL_GameObject *_enemy;
+	SL_GameObject *_enemy2;
+
 	int _xSpeed;
 	int _ySpeed;
 
@@ -18,74 +62,79 @@ public:
 		_xSpeed = 0;
 		_ySpeed = 0;
 
-		_ship = new SL_GameObject("assets/playerShip2_red.png", getRenderer(), 0, 0, 112, 75);
+		_ship = new Player();
+		_ship->setup("assets/playerShip2_red.png", getRenderer(), 0, 0, 56, 36);
 		_ship->setXY((getWidth() / 2.0), (getHeight() / 2.0));
+
+		_enemy = new SL_GameObject();
+		_enemy->setup("assets/enemyBlue3.png", getRenderer(), 0, 0, 51, 41);
+		_enemy->setXY(100, 200);
+		_enemy->setVelocityX(220.0);
+		_enemy->setVelocityY(80.0);
+
+		_enemy2 = new SL_GameObject();
+		_enemy2->setup("assets/enemyBlue4.png", getRenderer(), 0, 0, 41, 42);
+		_enemy2->setXY(100, 200);
+		_enemy2->setVelocityX(-60.0);
+		_enemy2->setVelocityY(90.0);
 	}
 
 	void cleanupShip()
 	{
+		_enemy2->teardown();
+		delete _enemy2;
+		_enemy->teardown();
+		delete _enemy;
+		_ship->teardown();
 		delete _ship;
 	}
 
 	void handleEvent(SDL_Event event)
 	{
-		switch (event.type)
+		_ship->handleEvent(event);
+	}
+
+	void boundsBounce(SL_GameObject *object)
+	{
+		if (object->getX() - (object->getWidth() / 2.0) < 0)
 		{
-		case SDL_KEYDOWN:
-			if (event.key.keysym.scancode == SDL_SCANCODE_UP)
-			{
-				if(_ySpeed > -10){
-					_ySpeed--;
-				}
-			}
-			if (event.key.keysym.scancode == SDL_SCANCODE_DOWN)
-			{
-				if(_ySpeed < 10){
-					_ySpeed++;
-				}
-			}
-			if (event.key.keysym.scancode == SDL_SCANCODE_LEFT)
-			{
-				if(_xSpeed > -10)
-				{
-					_xSpeed--;
-				}
-			}
-			if (event.key.keysym.scancode == SDL_SCANCODE_RIGHT)
-			{
-				if(_xSpeed < 10)
-				{
-					_xSpeed++;
-				}
-			}
-			break;
+			object->setVelocityX(object->getVelocityX() * -1);
+			object->setX(object->getWidth() / 2.0);
+		}
+		if (object->getX() + (object->getWidth() / 2.0) > getWidth())
+		{
+			object->setVelocityX(object->getVelocityX() * -1);
+			object->setX(getWidth() - (object->getWidth() / 2.0));
+		}
+		if (object->getY() - (object->getHeight() / 2.0) < 0)
+		{
+			object->setVelocityY(object->getVelocityY() * -1);
+			object->setY(object->getHeight() / 2.0);
+		}
+		if (object->getY() + (object->getHeight() / 2.0) > getHeight())
+		{
+			object->setVelocityY(object->getVelocityY() * -1);
+			object->setY(getHeight() - (object->getHeight() / 2.0));
 		}
 	}
 
 	void update()
 	{
-		if(_ship != NULL)
-		{
-			_ship->setXY(_ship->getX() + (_xSpeed * getMillisecondsSinceLastLoop() / 40.0), _ship->getY() + (_ySpeed * getMillisecondsSinceLastLoop() / 40.0));
-			if((_ship->getX() < 0) || (_ship->getX() > getWidth()))
-			{
-				_xSpeed *= -1;
-			}
-			if((_ship->getY() < 0) || (_ship->getY() > getHeight()))
-			{
-				_ySpeed *= -1;
-			}
+		_ship->update();
+		boundsBounce(_ship);
 
-			_ship->update();
-		}
+		_enemy->update();
+		boundsBounce(_enemy);
+
+		_enemy2->update();
+		boundsBounce(_enemy2);
 	}
 
 	void render()
 	{
-		if(_ship != NULL)
-		{
-			_ship->render();
-		}
+		_enemy->render();
+		_enemy2->render();
+		_ship->render();
 	}
 };
 
