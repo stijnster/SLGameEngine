@@ -6,6 +6,8 @@
 class SL_GameObject
 {
 public:
+	int hitpoints;
+
 	SL_GameObject();
 	~SL_GameObject();
 
@@ -13,6 +15,11 @@ public:
 	void teardown();
 
 	void setSourceRect(int x, int y, int w, int h);
+	SDL_Rect getColliderRect();
+
+	void setActive(bool active);
+	bool isActive() { return _active; };
+
 	void setX(int x);
 	int getX() { return _x; };
 
@@ -35,6 +42,8 @@ public:
 	void update();
 	void render();
 
+	bool collidesWith(SL_GameObject *object);
+
 private:
 	int _x;
 	int _y;
@@ -42,6 +51,8 @@ private:
 	int _height;
 	float _velocityX;
 	float _velocityY;
+	bool _active;
+
 	SDL_Texture *_texture;
 	SDL_Renderer *_renderer;
 	SDL_Rect _sourceRect, _destinationRect;

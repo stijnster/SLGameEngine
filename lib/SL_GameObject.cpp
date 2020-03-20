@@ -30,7 +30,10 @@ void SL_GameObject::setup(const char *filename, SDL_Renderer *renderer, int x, i
 	_width = width;
 	_height = height;
 
+	_active = true;
 	_ticksSinceLastUpdate = 0;
+
+	hitpoints = 0;
 
 	_updatePosition();
 }
@@ -49,6 +52,11 @@ void SL_GameObject::setSourceRect(int x, int y, int w, int h)
 	_sourceRect.y = y;
 	_sourceRect.w = w;
 	_sourceRect.h = h;
+}
+
+void SL_GameObject::setActive(bool active)
+{
+	_active = active;
 }
 
 void SL_GameObject::setXY(int x, int y)
@@ -90,16 +98,19 @@ void SL_GameObject::_updatePosition()
 
 void SL_GameObject::update()
 {
-	float _ticks = (SDL_GetTicks() - _ticksSinceLastUpdate) / 1000.0;
-
-	if (_velocityX != 0.0)
+	if (_active)
 	{
-		setX(_x + (_velocityX * _ticks));
-	}
+		float _ticks = (SDL_GetTicks() - _ticksSinceLastUpdate) / 1000.0;
 
-	if (_velocityY != 0.0)
-	{
-		setY(_y + (_velocityY * _ticks));
+		if (_velocityX != 0.0)
+		{
+			setX(_x + (_velocityX * _ticks));
+		}
+
+		if (_velocityY != 0.0)
+		{
+			setY(_y + (_velocityY * _ticks));
+		}
 	}
 
 	_ticksSinceLastUpdate = SDL_GetTicks();
@@ -107,5 +118,24 @@ void SL_GameObject::update()
 
 void SL_GameObject::render()
 {
-	SDL_RenderCopy(_renderer, _texture, &_sourceRect, &_destinationRect);
+	if (_active)
+	{
+		SDL_RenderCopy(_renderer, _texture, &_sourceRect, &_destinationRect);
+	}
+}
+
+SDL_Rect SL_GameObject::getColliderRect()
+{
+	return _destinationRect;
+}
+
+bool SL_GameObject::collidesWith(SL_GameObject *object)
+{
+	SDL_Rect self = this->getColliderRect();
+	SDL_Rect other = object->getColliderRect();
+
+	bool collisionX = (((self.x + self.w) >= other.x) && ((other.x + other.w) >= self.x));
+	bool collisionY = (((self.y + self.h) >= other.y) && ((other.y + other.h) >= self.y));
+
+	return collisionX && collisionY;
 }
