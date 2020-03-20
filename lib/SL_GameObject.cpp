@@ -1,0 +1,84 @@
+#include "SL_GameObject.h"
+#include "SL_TextureManager.h"
+
+SL_GameObject::SL_GameObject(const char *filename, SDL_Renderer *renderer, int x, int y, int width, int height)
+{
+	_renderer = renderer;
+
+	SL_TextureWidthAndHeight textureManagerWidthAndHeight = SL_TextureManager::loadTextureWithAndHeight(filename, _renderer);
+
+	_texture = textureManagerWidthAndHeight.texture;
+
+	_sourceRect.x = 0;
+	_sourceRect.y = 0;
+	_sourceRect.w = textureManagerWidthAndHeight.w;
+	_sourceRect.h = textureManagerWidthAndHeight.h;
+
+	_x = x;
+	_y = y;
+	_width = width;
+	_height = height;
+
+	_updatePosition();
+}
+
+SL_GameObject::~SL_GameObject()
+{
+	if(_texture != NULL){
+		SL_TextureManager::destroyTexture(_texture);
+	}
+}
+
+void SL_GameObject::setSourceRect(int x, int y, int w, int h)
+{
+	_sourceRect.x = x;
+	_sourceRect.y = y;
+	_sourceRect.w = w;
+	_sourceRect.h = h;
+}
+
+void SL_GameObject::setXY(int x, int y)
+{
+	_x = x;
+	_y = y;
+	_updatePosition();
+}
+
+void SL_GameObject::setX(int x)
+{
+	setXY(x, getY());
+}
+
+void SL_GameObject::setY(int y)
+{
+	setXY(getX(), y);
+}
+
+void SL_GameObject::setWidth(int width)
+{
+	_width = width;
+	_updatePosition();
+}
+
+void SL_GameObject::setHeight(int height)
+{
+	_height = height;
+	_updatePosition();
+}
+
+void SL_GameObject::_updatePosition()
+{
+	_destinationRect.x = round(_x - (_width / 2.0));
+	_destinationRect.y = round(_y - (_height / 2.0));
+	_destinationRect.w = _width;
+	_destinationRect.h = _height;
+}
+
+void SL_GameObject::update()
+{
+}
+
+void SL_GameObject::render()
+{
+	SDL_RenderCopy(_renderer, _texture, &_sourceRect, &_destinationRect);
+}

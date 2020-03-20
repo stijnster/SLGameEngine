@@ -6,22 +6,6 @@
 
 class SL_GameEngine
 {
-private:
-	SDL_Window *_window;
-	SDL_Renderer *_renderer;
-
-	int _width, _height;
-	int _FPS, _frameDelay, _frameTime;
-	int _millisecondsSinceLastLoop;
-	Uint32 _frameStart;
-	bool _isRunning;
-
-	void _startLoop();
-	void _handleEvents();
-	void _update();
-	void _render();
-	void _endLoop();
-
 public:
 	SL_GameEngine();
 	~SL_GameEngine();
@@ -104,6 +88,22 @@ public:
 	 * A virtual function for the derived GameEngine that can is called from the game loop during the _render phase.
 	 */
 	virtual void render();
+
+private:
+	SDL_Window *_window;
+	SDL_Renderer *_renderer;
+
+	int _width, _height;
+	int _FPS, _frameDelay, _frameTime;
+	int _millisecondsSinceLastLoop;
+	Uint32 _frameStart;
+	bool _isRunning;
+
+	void _startLoop();
+	void _handleEvents();
+	void _update();
+	void _render();
+	void _endLoop();
 };
 
 #endif
