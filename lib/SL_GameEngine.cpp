@@ -64,6 +64,7 @@ void SL_GameEngine::run()
 
 		_handleEvents();
 		_update();
+		_garbageCollection();
 		_render();
 
 		_endLoop();
@@ -83,6 +84,11 @@ void SL_GameEngine::_handleEvents()
 	{
 		handleEvent(event);
 
+		for (unsigned int i = 0; i < gameObjects.size(); i++)
+		{
+			gameObjects[i]->handleEvent(event);
+		}
+
 		switch (event.type)
 		{
 		case SDL_QUIT:
@@ -96,13 +102,36 @@ void SL_GameEngine::_handleEvents()
 
 void SL_GameEngine::_update()
 {
+	for (unsigned int i = 0; i < gameObjects.size(); i++)
+	{
+		gameObjects[i]->update();
+	}
+
 	update();
+}
+
+void SL_GameEngine::_garbageCollection()
+{
+	for(unsigned int i = gameObjects.size(); i > 0; i--){
+		SL_GameObject *gameObject = gameObjects[i - 1];
+		if(gameObject->shouldBeDisposed())
+		{
+			gameObject->teardown();
+			delete gameObject;
+
+			gameObjects.erase(gameObjects.begin() + (i - 1));
+		}
+	}
 }
 
 void SL_GameEngine::_render()
 {
 	SDL_RenderClear(_renderer);
 
+	for (unsigned int i = 0; i < gameObjects.size(); i++)
+	{
+		gameObjects[i]->render();
+	}
 	render();
 
 	SDL_RenderPresent(_renderer);
@@ -125,6 +154,12 @@ void SL_GameEngine::_endLoop()
 
 void SL_GameEngine::teardown()
 {
+	for (unsigned int i = 0; i < gameObjects.size(); i++)
+	{
+		gameObjects[i]->dispose();
+	}
+	_garbageCollection();
+
 	if (_renderer)
 	{
 		SDL_DestroyRenderer(_renderer);
@@ -136,6 +171,12 @@ void SL_GameEngine::teardown()
 	}
 
 	SDL_Quit();
+}
+
+void SL_GameEngine::addGameObject(SL_GameObject *gameObject)
+{
+	gameObject->setEngine(this);
+	gameObjects.push_back(gameObject);
 }
 
 void SL_GameEngine::handleEvent(SDL_Event event)

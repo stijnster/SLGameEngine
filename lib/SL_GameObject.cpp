@@ -30,8 +30,9 @@ void SL_GameObject::setup(const char *filename, SDL_Renderer *renderer, int x, i
 	_width = width;
 	_height = height;
 
+	_dispose = false;
 	_active = true;
-	_ticksSinceLastUpdate = 0;
+	_ticksSinceLastUpdate = SDL_GetTicks();
 
 	hitpoints = 0;
 
@@ -96,6 +97,10 @@ void SL_GameObject::_updatePosition()
 	_destinationRect.h = _height;
 }
 
+void SL_GameObject::handleEvent(SDL_Event event)
+{
+}
+
 void SL_GameObject::update()
 {
 	if (_active)
@@ -124,6 +129,17 @@ void SL_GameObject::render()
 	}
 }
 
+void SL_GameObject::dispose()
+{
+	_dispose = true;
+}
+
+bool SL_GameObject::shouldBeDisposed()
+{
+	return _dispose;
+}
+
+
 SDL_Rect SL_GameObject::getColliderRect()
 {
 	return _destinationRect;
@@ -138,4 +154,8 @@ bool SL_GameObject::collidesWith(SL_GameObject *object)
 	bool collisionY = (((self.y + self.h) >= other.y) && ((other.y + other.h) >= self.y));
 
 	return collisionX && collisionY;
+}
+
+void SL_GameObject::setEngine(SL_GameEngine *engine){
+	_engine = engine;
 }

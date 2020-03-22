@@ -2,13 +2,20 @@
 #define SL_GAMEENGINE_H
 
 #include <stdio.h>
+#include <vector>
 #include <SDL2/SDL.h>
+
+#include "SL_GameObject.h"
+
+class SL_GameObject;
 
 class SL_GameEngine
 {
 public:
 	SL_GameEngine();
 	~SL_GameEngine();
+
+	std::vector<SL_GameObject *> gameObjects;
 
 	/**
 	 * Engine setup
@@ -66,6 +73,8 @@ public:
 
 	int getMillisecondsSinceLastLoop() { return _millisecondsSinceLastLoop; }
 
+	void addGameObject(SL_GameObject *gameObject);
+
 	/**
 	 * Handle a single event
 	 *
@@ -102,6 +111,7 @@ private:
 	void _startLoop();
 	void _handleEvents();
 	void _update();
+	void _garbageCollection();
 	void _render();
 	void _endLoop();
 };

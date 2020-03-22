@@ -3,10 +3,15 @@
 
 #include <SDL2/SDL.h>
 
+#include "SL_GameEngine.h"
+
+class SL_GameEngine;
+
 class SL_GameObject
 {
 public:
 	int hitpoints;
+	int tag;
 
 	SL_GameObject();
 	~SL_GameObject();
@@ -39,8 +44,15 @@ public:
 	void setVelocityY(int velocityY) { _velocityY = velocityY; };
 	float getVelocityY() { return _velocityY; };
 
-	void update();
-	void render();
+	void setEngine(SL_GameEngine *engine);
+	SL_GameEngine *getEngine() { return _engine; };
+
+	virtual void handleEvent(SDL_Event event);
+	virtual void update();
+	virtual void render();
+
+	void dispose();
+	bool shouldBeDisposed();
 
 	bool collidesWith(SL_GameObject *object);
 
@@ -52,11 +64,13 @@ private:
 	float _velocityX;
 	float _velocityY;
 	bool _active;
+	bool _dispose;
 
 	SDL_Texture *_texture;
 	SDL_Renderer *_renderer;
 	SDL_Rect _sourceRect, _destinationRect;
 	Uint32 _ticksSinceLastUpdate;
+	SL_GameEngine *_engine;
 
 	void _updatePosition();
 };
