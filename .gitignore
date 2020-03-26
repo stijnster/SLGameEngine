@@ -1,6 +1,6 @@
 .DS_Store
 
-example/bin/
+examples/**/bin/
 
 # Prerequisites
 *.d
