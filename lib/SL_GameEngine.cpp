@@ -47,6 +47,8 @@ int SL_GameEngine::setup(const char *title, int width, int height, bool fullscre
 
 	_isRunning = true;
 
+	afterSetup();
+
 	return 0;
 }
 
@@ -102,12 +104,14 @@ void SL_GameEngine::_handleEvents()
 
 void SL_GameEngine::_update()
 {
+	beforeUpdate();
+
 	for (unsigned int i = 0; i < gameObjects.size(); i++)
 	{
 		gameObjects[i]->update();
 	}
 
-	update();
+	afterUpdate();
 }
 
 void SL_GameEngine::_garbageCollection()
@@ -128,11 +132,13 @@ void SL_GameEngine::_render()
 {
 	SDL_RenderClear(_renderer);
 
+	beforeRender();
+
 	for (unsigned int i = 0; i < gameObjects.size(); i++)
 	{
 		gameObjects[i]->render();
 	}
-	render();
+	afterRender();
 
 	SDL_RenderPresent(_renderer);
 }
@@ -154,6 +160,8 @@ void SL_GameEngine::_endLoop()
 
 void SL_GameEngine::teardown()
 {
+	beforeTeardown();
+
 	for (unsigned int i = 0; i < gameObjects.size(); i++)
 	{
 		gameObjects[i]->dispose();
@@ -177,16 +185,4 @@ void SL_GameEngine::addGameObject(SL_GameObject *gameObject)
 {
 	gameObject->setEngine(this);
 	gameObjects.push_back(gameObject);
-}
-
-void SL_GameEngine::handleEvent(SDL_Event event)
-{
-}
-
-void SL_GameEngine::update()
-{
-}
-
-void SL_GameEngine::render()
-{
 }

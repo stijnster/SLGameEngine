@@ -76,27 +76,43 @@ public:
 	void addGameObject(SL_GameObject *gameObject);
 
 	/**
-	 * Handle a single event
+	 * A hook that gets called when the engine has completed setup and is ready to run
+	 */
+	virtual void afterSetup(){};
+
+	/**
+	 * A hook that gets called to process a single event
 	 *
 	 * Events in the game loop are pulled and passed on to this virtual function.
 	 *
 	 * @param event The event to handle
 	 */
-	virtual void handleEvent(SDL_Event event);
+	virtual void handleEvent(SDL_Event event){};
 
 	/**
-	 * Update derived GameEngine
-	 *
-	 * A virtual function for the derived GameEngine that can is called from the game loop during the _update phase.
+	 * A hook that gets called before update
 	 */
-	virtual void update();
+	virtual void beforeUpdate(){};
 
 	/**
-	 * Render derived GameEngine
-	 *
-	 * A virtual function for the derived GameEngine that can is called from the game loop during the _render phase.
+	 * A hook that gets called after update
 	 */
-	virtual void render();
+	virtual void afterUpdate(){};
+
+	/**
+	 * A hook that gets called before render
+	 */
+	virtual void beforeRender(){};
+
+	/**
+	 * A hook that gets called after render
+	 */
+	virtual void afterRender(){};
+
+	/**
+	 * A hook that gets called before teardown
+	 */
+	virtual void beforeTeardown(){};
 
 private:
 	SDL_Window *_window;
